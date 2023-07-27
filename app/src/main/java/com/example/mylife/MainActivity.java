@@ -1,6 +1,9 @@
 package com.example.mylife;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,8 +45,23 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onDeleteClick(Blog blog) {
-                blogDao.deleteBlog(blog);
-                loadBlogs();
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Confirm Deletion")
+                        .setMessage("Are you sure you want to delete this blog?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int whichButton) {
+                                blogDao.deleteBlog(blog);
+                                dialog.dismiss();
+                                loadBlogs();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
             }
         });
     }
